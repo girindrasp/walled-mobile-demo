@@ -7,16 +7,14 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import HelloWorld from "./components/HelloWorld";
-import Button from "./components/Button";
-import Input from "./components/Input";
+import Button from "../components/Button";
+import Input from "../components/Input";
+import { Link } from "expo-router";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Image source={require("./assets/walledLogo.png")} style={styles.logo} />
-
-      {/* <HelloWorld/> */}
+      <Image source={require("../assets/walledLogo.png")} style={styles.logo} />
 
       <TextInput
         style={styles.input}
@@ -32,7 +30,12 @@ export default function App() {
       />
 
       <Button text="Login" />
-      <Input text="Notes" />
+
+      <View style={styles.link}>
+        <Link  href="/register">
+        Don't have account? Register here
+        </Link>
+      </View>
 
       <StatusBar style="auto" />
     </View>
@@ -68,4 +71,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     fontSize: 16,
   },
+  link: {
+    width: '100%',
+    marginTop: 10,
+    marginLeft: 20,
+    alignItems: "flex-start",
+    justifyContent: 'flex-start'
+  }
 });
