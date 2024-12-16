@@ -4,11 +4,9 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
   Image,
 } from "react-native";
 import Button from "../components/Button";
-import Input from "../components/Input";
 import { Link } from "expo-router";
 
 export default function App() {
@@ -29,7 +27,14 @@ export default function App() {
         secureTextEntry={true}
       />
 
-      <Button text="Login" />
+      <Link href="/(home)">
+        <Button text= "Login" bgColor="#19918F"/>
+      </Link>
+
+      <Link href="/(home)" style={styles.linkText}>
+        Masuk
+      </Link>
+
 
       <View style={styles.link}>
         <Link  href="/register">

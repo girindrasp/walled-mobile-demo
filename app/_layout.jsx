@@ -12,10 +12,16 @@ export default function Layout() {
           fontWeight: 'bold',
         },
       }}>
-      {/* Optionally configure static options outside the route.*/}
-      <Stack.Screen name="home" options={{}} />
+      <Stack.Screen name="(home)" options={{ headerShown: false }} />
       <Stack.Screen name="index" options={{ headerShown: false }}/>
       <Stack.Screen name="register" options={{ headerShown: false }}/>
+      <Stack.Screen
+        name="Tnc"
+        options={{
+          presentation: 'modal',
+        }}
+      />
+      {/* <Stack.Screen name="home/index" options={{ headerShown: false }}/> */}
     </Stack>
   );
 }
