@@ -1,30 +1,39 @@
-import { TextInput, View, StyleSheet, Text } from "react-native";
+import React from "react";
+import { StyleSheet, TextInput, View, Text } from "react-native";
 
-function Input({text}){
-    return(
-        <View style={styles.container}>
-            <Text style={styles.Input}>{text}</Text>
-            <TextInput/>
-        </View>
-    )
+function Input({ text, value, onChangeText }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>{text}</Text>
+      <TextInput
+        style={styles.input}
+        placeholder={`Enter ${text}`}
+        value={value} // Properti untuk mengatur nilai dari luar
+        onChangeText={onChangeText} // Properti untuk mengubah nilai dari luar
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 10,
-        width: "100%",
-        backgroundColor: "white",
-
-    },
-    placeholder: {
-        color: "#B3b3b3"
-    },
-    Input: {
-        // padding: 20,
-        borderBottomColor: "black",
-        height: 50,
-        borderBottomWidth: 1,
-    }
-  });
+  container: {
+    marginVertical: 10,
+  },
+  label: {
+    fontSize: 14,
+    color: "#333",
+    marginBottom: 5,
+  },
+  input: {
+    width: "100%",
+    height: 50,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    backgroundColor: "#f9f9f9",
+    fontSize: 16,
+  },
+});
 
 export default Input;

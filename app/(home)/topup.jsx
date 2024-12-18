@@ -1,40 +1,77 @@
-import { View, Text, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-
+import React, { useState } from "react";
+import { View, StyleSheet, Alert } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 import Input from "../../components/Input";
 import Amount from "../../components/Amount";
 import Button from "../../components/Button";
-import { useState, useEffect } from "react";
-import { Dropdown } from "react-native-element-dropdown";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios, { Axios } from "axios";
 
 export default function Topup() {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(0); // Nilai awal amount adalah angka
+  const [description, setDescription] = useState("");
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
 
-    const handleTopUp = async () => {
-        try {
-            const response = await fetch('https://walled-api.vercel.app/transactions/topup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ amount }),
-            });
+  const data = [
+    { label: "BYOND Pay", value: "1" },
+    { label: "Mandiri", value: "2" },
+    { label: "BCA", value: "3" },
+  ];
 
-            if (response.ok) {
-                Alert.alert('Success', 'Top up successful');
-            } else {
-                Alert.alert('Error', 'Top up failed');
-            }
-        } catch (error) {
-            Alert.alert('Error', 'An error occurred');
+  const handleTopUp = async () => {
+    if (!amount || isNaN(amount)) {
+      Alert.alert("Error", "Please enter a valid amount.");
+      return;
+    }
+    if (!description) {
+      Alert.alert("Error", "Please fill in the description.");
+      return;
+    }
+    if (!value) {
+      Alert.alert("Error", "Please select a payment method.");
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Error", "Authentication token is missing.");
+        return;
+      }
+
+      // Request ke server
+      const response = await axios.post(
+        "https://walled-api.vercel.app/transactions/topup",
+        {
+          amount: parseFloat(amount),
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
+
+      // Periksa respons dari server
+      if (response.status === 200 || response.status === 201) {
+        console.log("Server Response:", response.data);
+        Alert.alert("Success", "Top up successful!");
+      } else {
+        console.log("Server Error:", response.data);
+        Alert.alert("Error", response.data.message || "Top up failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error.response || error.message);
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Amount marginBottom={24} />
+      <Amount handlePress={(value) => setAmount(value)} marginBottom={24} />
+
       <Dropdown
         style={[styles.dropdown, isFocus && { borderColor: "#19918F" }]}
         placeholderStyle={styles.placeholderStyle}
@@ -44,20 +81,24 @@ export default function Topup() {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? "BYOND Pay" : "..."}
+        placeholder={!isFocus ? "Select Payment Method" : "..."}
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
-          setValue(item.value);
+          setValue(item.value); // Set value dari dropdown
           setIsFocus(false);
         }}
       />
 
-      <Input text={"Notes"} />
+      <Input
+        text="Description"
+        value={description}
+        onChangeText={(text) => setDescription(text)} // Update state description
+      />
 
       <View style={styles.button}>
-        <Button text={"Top Up"} marginTop={150} />
+        <Button handlePress={handleTopUp} text="Top Up" />
       </View>
     </View>
   );
@@ -72,15 +113,9 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 100,
   },
-
-  picker: {
-    width: "100%",
-    marginBottom: 24,
-  },
   dropdown: {
     height: 50,
     borderColor: "gray",
-
     margin: 12,
     borderBottomWidth: 0.6,
   },
