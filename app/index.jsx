@@ -22,7 +22,6 @@ export default function App() {
 
   const navigation = useNavigation();
 
-
   useEffect(() => {
     AsyncStorage.getItem("token").then((res) => {
       setToken(res);
@@ -58,7 +57,7 @@ export default function App() {
       LoginSchema.parse(form);
       console.log("masukkk");
       const res = await axios.post(
-        "https://walled-api.vercel.app/auth/login",
+        "http://walled-api.vercel.app/auth/login",
         form
       );
       console.log(res.data.data.token, "ini pras");

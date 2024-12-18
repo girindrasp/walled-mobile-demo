@@ -23,7 +23,7 @@ export default function DashboardBody() {
               },
             }
           );
-          // console.log(res.data.data)
+          console.log(res.data.data)
           const user = res.data.data
           setUser(user)
         }
@@ -53,7 +53,7 @@ export default function DashboardBody() {
 
       <View style={styles.accountBox}>
         <Text style={styles.accountLabel}>Account No.</Text>
-        <Text style={styles.accountLabel}>{user.wallet.account_number}</Text>
+        <Text style={styles.accountLabel}>{user.wallet?.account_number}</Text>
       </View>
 
       <View style={styles.balanceSection}>
@@ -95,8 +95,9 @@ export default function DashboardBody() {
           <View style={styles.transactionLeft}>
             <View style={styles.avatarPlaceholder}></View>
             <View style={styles.transactionTextBlock}>
-              <Text style={styles.transactionName}>Adityo Gizwanda</Text>
-              <Text style={styles.transactionType}>Transfer</Text>
+              console.log({user.data?.fullname})
+              <Text style={styles.transactionName}>{user.fullname}</Text>
+              <Text style={styles.transactionType}>{user.data?.wallet.amount}</Text>
               <Text style={styles.transactionDate}>08 December 2024</Text>
             </View>
           </View>
